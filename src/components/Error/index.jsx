@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 import colors from '../../utils/style/color.js'
 import ErrorPicture from '../../assets/404.svg'
+import { useTheme } from '../../utils/hooks'
 
 const ErrorWrapper = styled.div`
   margin: 30px;
@@ -23,11 +24,13 @@ const Illustration = styled.img`
 `
 
 function Error() {
+  const { theme } = useTheme()
+
   return (
-    <ErrorWrapper>
-      <ErrorTitle>Oups...</ErrorTitle>
+    <ErrorWrapper theme={theme}>
+      <ErrorTitle theme={theme}>Oups...</ErrorTitle>
       <Illustration src={ErrorPicture} />
-      <ErrorSubtitle>
+      <ErrorSubtitle theme={theme}>
         Il semblerait que la page que vous cherchez n'existe pas
       </ErrorSubtitle>
     </ErrorWrapper>

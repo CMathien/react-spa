@@ -1,7 +1,7 @@
 import Card from '../../components/Card'
 import styled from 'styled-components'
 import colors from '../../utils/style/color.js'
-import { useState, useEffect } from 'react'
+import { useFetch, useTheme } from '../../utils/hooks/index'
 import { Loader } from '../../utils/style/Atoms.jsx'
 
 const CardsContainer = styled.div`
@@ -30,29 +30,15 @@ const PageSubtitle = styled.h2`
 const LoaderWrapper = styled.div`
   display: flex;
   justify-content: center;
-  `
+`
 
 function Freelances() {
-  const [freelancersList, setFreelancersList] = useState([])
-  const [isDataLoading, setDataLoading] = useState(false)
-  const [error, setError] = useState(null)
+  const { theme } = useTheme()
+  const { data, isLoading, error } = useFetch(
+    `http://localhost:8000/freelances`
+  )
 
-  useEffect(() => {
-    async function fetchFreelances() {
-      setDataLoading(true)
-      try {
-        const response = await fetch(`http://localhost:8000/freelances`)
-        const { freelancersList } = await response.json()
-        setFreelancersList(freelancersList)
-      } catch (error) {
-        console.log(error)
-        setError(true)
-      } finally {
-        setDataLoading(false)
-      }
-    }
-    fetchFreelances()
-  }, [])
+  const freelancersList = data?.freelancersList
 
   if (error) {
     return <span>Erreur inattendue</span>
@@ -60,14 +46,14 @@ function Freelances() {
 
   return (
     <div>
-      <PageTitle>Trouvez votre prestataire</PageTitle>
-      <PageSubtitle>
+      <PageTitle theme={theme}>Trouvez votre prestataire</PageTitle>
+      <PageSubtitle theme={theme}>
         Chez Shiny, nous réunissons les meilleurs profils pour vous.
       </PageSubtitle>
 
-      {isDataLoading ? (
+      {isLoading ? (
         <LoaderWrapper>
-          <Loader />
+          <Loader theme={theme} />
         </LoaderWrapper>
       ) : (
         <CardsContainer>

@@ -2,6 +2,7 @@ import styled from 'styled-components'
 import colors from '../../utils/style/color.js'
 import { StyledLink } from '../../utils/style/Atoms.jsx'
 import HomeIllustration from '../../assets/home-illustration.svg'
+import { useTheme } from '../../utils/hooks'
 
 const HomeWrapper = styled.div`
 display;flex;
@@ -37,11 +38,12 @@ const Illustration = styled.img`
   flex: 1;
 `
 function Home() {
+    const { theme } = useTheme()
   return (
     <HomeWrapper>
-      <HomeContainer>
+      <HomeContainer theme={theme}>
         <LeftCol>
-          <StyledTitle>
+          <StyledTitle theme={theme}>
             Repérez vos besoins, on s'occupe du reste, avec les meilleurs
             talents
           </StyledTitle>

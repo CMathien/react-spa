@@ -1,9 +1,10 @@
 import { useParams, Link } from 'react-router-dom'
-import { useEffect, useState, useContext } from 'react'
+import { useContext } from 'react'
 import styled from 'styled-components'
 import colors from '../../utils/style/color.js'
 import { Loader } from '../../utils/style/Atoms.jsx'
 import { SurveyContext } from '../../utils/context/index.jsx'
+import { useFetch, useTheme } from '../../utils/hooks/index.jsx'
 
 const SurveyContainer = styled.div`
   display: flex;
@@ -60,44 +61,15 @@ function Survey() {
   const questionNumberInt = parseInt(questionNumber)
   const prevQuestionNumber = questionNumberInt === 1 ? 1 : questionNumberInt - 1
   const nextQuestionNumber = questionNumberInt + 1
-  const [surveyData, setSurveyData] = useState({})
-  const [isDataLoading, setDataLoading] = useState(false)
-  const [error, setError] = useState(null)
+  const { theme } = useTheme()
   const { answers, saveAnswers } = useContext(SurveyContext)
-
-  //   useEffect(() => {
-  //     setDataLoading(true)
-  //     fetch(`http://localhost:8000/survey`).then((response) =>
-  //       response
-  //         .json()
-  //         .then(({ surveyData }) => {
-  //           setSurveyData(surveyData)
-  //           setDataLoading(false)
-  //         })
-  //         .catch((error) => console.log(error))
-  //     )
-  //   }, [])
 
   function saveReply(answer) {
     saveAnswers({ [questionNumber]: answer })
   }
 
-  useEffect(() => {
-    async function fetchSurvey() {
-      setDataLoading(true)
-      try {
-        const response = await fetch(`http://localhost:8000/survey`)
-        const { surveyData } = await response.json()
-        setSurveyData(surveyData)
-      } catch (error) {
-        console.log(error)
-        setError(true)
-      } finally {
-        setDataLoading(false)
-      }
-    }
-    fetchSurvey()
-  }, [])
+  const { data, isLoading, error } = useFetch(`http://localhost:8000/survey`)
+  const { surveyData } = data
 
   if (error) {
     return <span>Erreur inattendue</span>
@@ -105,11 +77,13 @@ function Survey() {
 
   return (
     <SurveyContainer>
-      <QuestionTitle>Question {questionNumber}</QuestionTitle>
-      {isDataLoading ? (
+      <QuestionTitle theme={theme}>Question {questionNumber}</QuestionTitle>
+      {isLoading ? (
         <Loader />
       ) : (
-        <QuestionContent>{surveyData[questionNumber]} </QuestionContent>
+        <QuestionContent theme={theme}>
+          {surveyData && surveyData[questionNumber]}
+        </QuestionContent>
       )}
       <ReplyWrapper>
         <ReplyBox
@@ -129,9 +103,9 @@ function Survey() {
           Non
         </ReplyBox>
       </ReplyWrapper>
-      <LinkWrapper>
+      <LinkWrapper theme={theme}>
         <Link to={`/survey/${prevQuestionNumber}`}>Précédent</Link>
-        {surveyData[questionNumberInt + 1] ? (
+        {surveyData && surveyData[questionNumberInt + 1] ? (
           <Link to={`/survey/${nextQuestionNumber}`}>Suivant</Link>
         ) : (
           <Link to="/results">Résultats</Link>

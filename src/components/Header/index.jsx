@@ -1,7 +1,9 @@
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import DarkLogo from '../../assets/dark-logo.png'
+import LightLogo from '../../assets/light-logo.png'
 import { StyledLink } from '../../utils/style/Atoms'
+import { useTheme } from '../../utils/hooks'
 
 const HomeLogo = styled.img`
   height: 70px;
@@ -14,16 +16,17 @@ const NavContainer = styled.nav`
 `
 
 function Header() {
+  const { theme } = useTheme()
   return (
     <NavContainer>
       <Link>
-        <HomeLogo src={DarkLogo} />
+        <HomeLogo ssrc={theme === 'light' ? DarkLogo : LightLogo} />
       </Link>
       <div>
-        <StyledLink to="/">Accueil</StyledLink>
-        <StyledLink to="/freelances">Profils</StyledLink>
+        <StyledLink $theme={theme} to="/">Accueil</StyledLink>
+        <StyledLink $theme={theme} to="/freelances">Profils</StyledLink>
         {/* Le $ est obligatoire dans les composants React, il indique que la prop est utilisée pour le style et ne doit pas être passée dans le DOM */}
-        <StyledLink to="/survey/1" $isFullLink>
+        <StyledLink $theme={theme} to="/survey/1" $isFullLink>
           Faire le test
         </StyledLink>
       </div>
