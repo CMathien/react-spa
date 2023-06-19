@@ -21,8 +21,7 @@ function Header() {
       </Link>
       <div>
         <StyledLink to="/">Accueil</StyledLink>
-        <StyledLink to="/survey/42">Questionnaire</StyledLink>
-        <StyledLink to="/freelances">Freelances</StyledLink>
+        <StyledLink to="/freelances">Profils</StyledLink>
         {/* Le $ est obligatoire dans les composants React, il indique que la prop est utilisée pour le style et ne doit pas être passée dans le DOM */}
         <StyledLink to="/survey/1" $isFullLink>
           Faire le test
