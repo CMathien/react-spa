@@ -37,7 +37,7 @@ function Freelances() {
 
 Card.propTypes = {
   label: PropTypes.string,
-  titel: PropTypes.string,
+  title: PropTypes.string.isRequired,
   picture: PropTypes.string,
 }
 
