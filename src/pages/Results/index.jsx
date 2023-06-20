@@ -52,7 +52,7 @@ const LoaderWrapper = styled.div`
   justify-content: center;
 `
 
-function formatQueryParams(answers) {
+export function formatQueryParams(answers) {
   const answerNumbers = Object.keys(answers)
 
   return answerNumbers.reduce((previousParams, answerNumber, index) => {
@@ -61,6 +61,14 @@ function formatQueryParams(answers) {
     return `${previousParams}${separator}a${answerNumber}=${answers[answerNumber]}`
   }, '')
 }
+
+export function formatJobList(title, listLength, index) {
+    if (index === listLength - 1) {
+      return title
+    } else {
+      return `${title},`
+    }
+  }
 
 function Results() {
   const { theme } = useTheme()
@@ -90,8 +98,7 @@ function Results() {
               key={`result-title-${index}-${result.title}`}
               theme={theme}
             >
-              {result.title}
-              {index === resultsData.length - 1 ? '' : ','}
+              {formatJobList(result.title, resultsData.length, index)}
             </JobTitle>
           ))}
       </ResultsTitle>
