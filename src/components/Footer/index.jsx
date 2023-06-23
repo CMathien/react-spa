@@ -1,6 +1,6 @@
+import { useTheme } from '../../utils/hooks'
 import styled from 'styled-components'
 import colors from '../../utils/style/color'
-import { useTheme } from '../../utils/hooks'
 
 const FooterContainer = styled.footer`
   display: flex;

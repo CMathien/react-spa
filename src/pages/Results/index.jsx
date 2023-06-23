@@ -1,8 +1,8 @@
 import { useContext } from 'react'
-import { SurveyContext } from '../../utils/context/index'
-import { useFetch, useTheme } from '../../utils/hooks/index'
+import { SurveyContext } from '../../utils/context'
 import styled from 'styled-components'
 import colors from '../../utils/style/color'
+import { useFetch, useTheme } from '../../utils/hooks'
 import { StyledLink, Loader } from '../../utils/style/Atoms'
 
 const ResultsContainer = styled.div`
@@ -56,47 +56,49 @@ export function formatQueryParams(answers) {
   const answerNumbers = Object.keys(answers)
 
   return answerNumbers.reduce((previousParams, answerNumber, index) => {
-    const isFirstAnswer = index === 0
-    const separator = isFirstAnswer ? '' : '&'
+    const isFirstParam = index === 0
+    const separator = isFirstParam ? '' : '&'
     return `${previousParams}${separator}a${answerNumber}=${answers[answerNumber]}`
   }, '')
 }
 
 export function formatJobList(title, listLength, index) {
-    if (index === listLength - 1) {
-      return title
-    } else {
-      return `${title},`
-    }
+  if (index === listLength - 1) {
+    return title
+  } else {
+    return `${title},`
   }
+}
 
 function Results() {
   const { theme } = useTheme()
   const { answers } = useContext(SurveyContext)
   const queryParams = formatQueryParams(answers)
+
   const { data, isLoading, error } = useFetch(
     `http://localhost:8000/results?${queryParams}`
   )
-  console.log(data)
+
   if (error) {
-    return <span>Erreur inattendue</span>
+    return <span>Il y a un problème</span>
   }
 
   const resultsData = data?.resultsData
 
   return isLoading ? (
     <LoaderWrapper>
-      <Loader />
+      <Loader data-testid="loader"/>
     </LoaderWrapper>
   ) : (
     <ResultsContainer theme={theme}>
       <ResultsTitle theme={theme}>
-        Les compéténces dont vous avez besoin :
+        Les compétences dont vous avez besoin :
         {resultsData &&
           resultsData.map((result, index) => (
             <JobTitle
               key={`result-title-${index}-${result.title}`}
               theme={theme}
+              data-testid="job-title"
             >
               {formatJobList(result.title, resultsData.length, index)}
             </JobTitle>
@@ -111,6 +113,7 @@ function Results() {
             <JobDescription
               theme={theme}
               key={`result-detail-${index}-${result.title}`}
+              data-testid="job-description"
             >
               <JobTitle theme={theme}>{result.title}</JobTitle>
               <p>{result.description}</p>
